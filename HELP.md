@@ -1,21 +1,31 @@
 # RocketMQ源码学习
 
+## 初识RocketMQ
 
-- 参考文档：
-[RocketMQ源码-从4.x到5.x](https://juejin.cn/post/7244708523962908709#heading-17)
+[官网RocketMQ 架构 4.x](https://rocketmq.apache.org/zh/docs/4.x/introduction/02whatis)
+
+- 官网已经把RocketMQ概念讲的很清楚了，不在此处赘述，其他概念可移步官网。
+- 队列：
+  - 为了消息写入能力的水平扩展，RocketMQ 对 Topic进行了分区，这种操作被称为队列（MessageQueue）。
+- ConsumerGroup的概念：
+  - 为了消费能力的水平扩展，ConsumerGroup的概念应运而生。
 
 
-选版本
-从使用角度来说，4.x和5.x各选最高的没什么问题，bug少，特性多，性能好。
-从读源码角度来说，我选4.6，因为：
-1）5.x版本复杂度非常高，虽然有很多新特性，但是很多if-else和class实现默认情况下是不会进的；
-2）4.9是可观测性的提升，大概率是一些埋点逻辑，可以暂时忽略；
-3）4.7和4.8是性能优化，大概率代码会更复杂，不利于分析主干逻辑；
-3）4.6版本已经基本满足了业务诉求，且代码逻辑应该相对更加清晰，容易上手；
-4.6看完之后，再分析5.x的部分特性。
+# 参考文档：
 
-作者：程序猿阿越
-链接：https://juejin.cn/post/7244708523962908709
-来源：稀土掘金
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+官网
+
+- [初识RocketMQ](https://rocketmq.apache.org/zh/docs/4.x/introduction/02whatis)
+
+RocketMQ源码-程序猿阿越
+
+- [RocketMQ4源码（一）NameServer](https://juejin.cn/post/7257307209721167930)
+
+勇哥Java实战
+
+- [勇哥Java实战-](https://javayong.cn/)
+
+- [RocketMQ4.X 设计精要](https://mp.weixin.qq.com/s/aMSa5GKloN2_lsMHRpGiOA)
+
+
 
