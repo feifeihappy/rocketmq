@@ -1,73 +1,35 @@
-## Apache RocketMQ [![Build Status](https://travis-ci.org/apache/rocketmq.svg?branch=master)](https://travis-ci.org/apache/rocketmq) [![Coverage Status](https://coveralls.io/repos/github/apache/rocketmq/badge.svg?branch=master)](https://coveralls.io/github/apache/rocketmq?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.rocketmq/rocketmq-all/badge.svg)](http://search.maven.org/#search%7Cga%7C1%7Corg.apache.rocketmq)
-[![GitHub release](https://img.shields.io/badge/release-download-orange.svg)](https://rocketmq.apache.org/dowloading/releases)
-[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+# RocketMQ源码学习
 
-**[Apache RocketMQ](https://rocketmq.apache.org) is a distributed messaging and streaming platform with low latency, high performance and reliability, trillion-level capacity and flexible scalability.**
+## 初识RocketMQ
 
-It offers a variety of features:
+[官网RocketMQ 架构 4.x](https://rocketmq.apache.org/zh/docs/4.x/introduction/02whatis)
 
-* Pub/Sub messaging model
-* Financial grade transactional message
-* A variety of cross language clients, such as Java, C/C++, Python, Go
-* Pluggable transport protocols, such as TCP, SSL, AIO
-* Inbuilt message tracing capability, also support opentracing
-* Versatile big-data and streaming ecosytem integration
-* Message retroactivity by time or offset
-* Reliable FIFO and strict ordered messaging in the same queue
-* Efficient pull&push consumption model
-* Million-level message accumulation capacity in a single queue
-* Multiple messaging protocols like JMS and OpenMessaging
-* Flexible distributed scale-out deployment architecture
-* Lightning-fast batch message exchange system
-* Various message filter mechanics such as SQL and Tag
-* Docker images for isolated testing and cloud isolated clusters
-* Feature-rich administrative dashboard for configuration, metrics and monitoring
-* Authentication and authorisation
+- NameServer
+    - 是一个简单的 Topic 路由注册中心，支持 Topic、Broker 的动态注册与发现
+- Broker
+    - 主要负责消息的存储、投递和查询以及服务高可用保证。
+- 队列：
+    - 为了消息写入能力的水平扩展，RocketMQ 对 Topic进行了分区，这种操作被称为队列（MessageQueue）。
+- ConsumerGroup的概念：
+    - 为了消费能力的水平扩展，ConsumerGroup的概念应运而生。
 
-----------
+- 官网已经把RocketMQ概念讲的很清楚了，不在此处赘述，其他概念可移步官网。
 
-## Learn it & Contact us
-* Mailing Lists: <https://rocketmq.apache.org/about/contact/>
-* Home: <https://rocketmq.apache.org>
-* Docs: <https://rocketmq.apache.org/docs/quick-start/>
-* Issues: <https://github.com/apache/rocketmq/issues>
-* Rips: <https://github.com/apache/rocketmq/wiki/RocketMQ-Improvement-Proposal>
-* Ask: <https://stackoverflow.com/questions/tagged/rocketmq>
-* Slack: <https://rocketmq-invite-automation.herokuapp.com/>
- 
+# 参考文档：
 
-----------
+官网
 
-## Apache RocketMQ Community
-* [RocketMQ Community Projects](https://github.com/apache/rocketmq-externals)
-----------
+- [初识RocketMQ](https://rocketmq.apache.org/zh/docs/4.x/introduction/02whatis)
 
-## Contributing
-We always welcome new contributions, whether for trivial cleanups, [big new features](https://github.com/apache/rocketmq/wiki/RocketMQ-Improvement-Proposal) or other material rewards, more details see [here](http://rocketmq.apache.org/docs/how-to-contribute/).
- 
-----------
-## License
-[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html) Copyright (C) Apache Software Foundation
+RocketMQ源码-程序猿阿越
+
+- [RocketMQ4源码（一）NameServer](https://juejin.cn/post/7257307209721167930)
+
+勇哥Java实战
+
+- [勇哥Java实战-](https://javayong.cn/)
+
+- [RocketMQ4.X 设计精要](https://mp.weixin.qq.com/s/aMSa5GKloN2_lsMHRpGiOA)
 
 
-----------
-## Export Control Notice
-This distribution includes cryptographic software. The country in which you currently reside may have
-restrictions on the import, possession, use, and/or re-export to another country, of encryption software.
-BEFORE using any encryption software, please check your country's laws, regulations and policies concerning
-the import, possession, or use, and re-export of encryption software, to see if this is permitted. See
-<http://www.wassenaar.org/> for more information.
 
-The U.S. Government Department of Commerce, Bureau of Industry and Security (BIS), has classified this
-software as Export Commodity Control Number (ECCN) 5D002.C.1, which includes information security software
-using or performing cryptographic functions with asymmetric algorithms. The form and manner of this Apache
-Software Foundation distribution makes it eligible for export under the License Exception ENC Technology
-Software Unrestricted (TSU) exception (see the BIS Export Administration Regulations, Section 740.13) for
-both object code and source code.
-
-The following provides more details on the included cryptographic software:
-
-This software uses Apache Commons Crypto (https://commons.apache.org/proper/commons-crypto/) to
-support authentication, and encryption and decryption of data sent across the network between
-services.
