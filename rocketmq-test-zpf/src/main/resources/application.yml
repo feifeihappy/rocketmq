@@ -1,0 +1,12 @@
+# 服务名称
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  profiles:
+    active: dev
+  jackson:
+    time-zone: GMT+8
+
+logging:
+  level:
+    com.lucifer.springboot.cache.mapper: debug

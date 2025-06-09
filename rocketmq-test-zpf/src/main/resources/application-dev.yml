@@ -1,0 +1,34 @@
+#开发环境配置
+server:
+  port: 8083
+#  servlet:
+#    contex、t-path: /mybatis-plus
+#  tomcat:
+#    basedir: /data/temp
+spring:
+  # 数据源配置
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test?useSSL=false&allowMultiQueries=true
+    username: admin
+    password: 123456
+    driver-class-name: org.postgresql.Driver
+
+#    url: jdbc:mysql://localhost:3306/pro?useSSL=false&allowMultiQueries=true
+#    username: root
+#    password: 123456
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#  data:
+#    mongodb:
+#      uri: mongodb://root:123456@localhost:27017/test?authSource=admin&authMechanism=SCRAM-SHA-1
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#rocketmq:
+#  namesrv-addr: localhost:9876
+#  name-server: localhost:9876
+#  producer:
+#    group: please_rename_unique_group_name
+rocketmq:
+  name-server: 127.0.0.1:9876
+  producer:
+    group: zpf_group_name
