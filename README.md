@@ -40,9 +40,10 @@ RocketMQ源码-程序猿阿越
 - springboot- 模块 : [rocketmq-test-zpf](rocketmq-test-zpf)
 - 访问失败的问题 
 
-`Send [3] times, still failed, cost connect to <10.101.251.30:10911> failed`
+  - `Send [3] times, still failed, cost connect to <10.101.251.30:10911> failed`
 - 修改 broker.conf： 
 
-`brokerIP1=10.24.99.61`
+  - `brokerIP1=10.24.99.61`
 - 参考:
-[Docker部署RocketMQ踩坑记录](https://www.cnblogs.com/kendoziyu/p/15210806.html)
+  - [Docker部署RocketMQ踩坑记录](https://www.cnblogs.com/kendoziyu/p/15210806.html)
+  - [RocketMQ 源码解析之 源代码环境搭建](https://blog.csdn.net/u012410733/article/details/122094431)
