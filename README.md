@@ -47,3 +47,18 @@ RocketMQ源码-程序猿阿越
 - 参考:
   - [Docker部署RocketMQ踩坑记录](https://www.cnblogs.com/kendoziyu/p/15210806.html)
   - [RocketMQ 源码解析之 源代码环境搭建](https://blog.csdn.net/u012410733/article/details/122094431)
+
+## CAP 理论（分布式基础理论）
+
+* 一致性（Consistency） : 所有节点访问的数据副本，都是相同的。
+* 可用性（Availability）: 非故障的节点在合理的时间内返回合理的响应（不是错误或者超时的响应）。
+* 分区容错性（Partition Tolerance） : 分布式系统出现网络分区的时候，仍然能够对外提供服务。
+
+**CAP 理论中分区容错性 P 是一定要满足的，在此基础上，只能满足可用性 A 或者一致性 C。**
+
+**选择 CP(一致性) 还是 AP （可用性） 的关键在于当前的业务场景，没有定论，比如对于需要确保强一致性的场景如银行一般会选择保证 CP 。**
+
+**总结：如果系统发生“分区”，我们要考虑选择 CP 还是 AP。如果系统没有发生“分区”的话，我们要思考如何保证 CA 。**
+
+
+> 参考[CAP & BASE理论详解](https://javaguide.cn/distributed-system/protocol/cap-and-base-theorem.html#%E7%AE%80%E4%BB%8B)
