@@ -111,6 +111,7 @@ public class BrokerOuterAPI {
         this.remotingClient.updateNameServerAddressList(lst);
     }
 
+    //broker向所有nameServer发送心跳命令
     public List<RegisterBrokerResult> registerBrokerAll(
         final String clusterName,
         final String brokerAddr,
@@ -122,6 +123,7 @@ public class BrokerOuterAPI {
         final boolean oneway,
         final int timeoutMills,
         final boolean compressed) {
+        log.info("begin to register broker at name server, clusterName: {}, brokerAddr: {}, brokerName: {}, brokerId: {}, ", clusterName, brokerAddr, brokerName, brokerId);
 
         final List<RegisterBrokerResult> registerBrokerResultList = Lists.newArrayList();
         List<String> nameServerAddressList = this.remotingClient.getNameServerAddressList();
