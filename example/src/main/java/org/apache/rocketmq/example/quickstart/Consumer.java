@@ -52,6 +52,7 @@ public class Consumer {
         /*
          * Specify where to start in case the specified consumer group is a brand new one.
          */
+        consumer.setNamesrvAddr("127.0.0.1:9876");
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
 
         /*
@@ -67,6 +68,11 @@ public class Consumer {
             @Override
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
                 ConsumeConcurrentlyContext context) {
+                for (MessageExt msg : msgs) {
+                    String body = new String(msg.getBody());
+                    System.out.printf("Message Body: %s %n", body);
+                }
+
                 System.out.printf("%s Receive New Messages: %s %n", Thread.currentThread().getName(), msgs);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
