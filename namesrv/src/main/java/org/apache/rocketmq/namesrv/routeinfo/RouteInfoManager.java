@@ -84,6 +84,7 @@ public class RouteInfoManager {
         }
     }
 
+    //查询主题信息
     public byte[] getAllTopicList() {
         TopicList topicList = new TopicList();
         try {
@@ -99,7 +100,7 @@ public class RouteInfoManager {
 
         return topicList.encode();
     }
-
+// broker 注册，更新路由信息
     public RegisterBrokerResult registerBroker(
         final String clusterName,
         final String brokerAddr,
@@ -372,6 +373,14 @@ public class RouteInfoManager {
         }
     }
 
+    /**
+     * @param topic
+     * @name: pickupTopicRouteData
+     * @description: 根据topic获取路由信息
+     * @return: org.apache.rocketmq.common.protocol.route.TopicRouteData
+     * @date: 2025/9/1 15:06
+     * @auther: zhaopengfei
+     */
     public TopicRouteData pickupTopicRouteData(final String topic) {
         TopicRouteData topicRouteData = new TopicRouteData();
         boolean foundQueueData = false;

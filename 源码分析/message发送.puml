@@ -1,0 +1,68 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title message发送
+'自动对消息编号
+autonumber
+'自动激活关键字
+autoactivate on
+'设置间距
+skinparam ParticipantPadding 10
+skinparam BoxPadding 20
+
+actor 发送mq消息
+
+box client #LightBlue
+participant DefaultMQProducer
+participant DefaultMQProducerImpl
+participant MQClientInstance
+participant MQClientAPIImpl
+end box
+
+box remoting #FFC0CB
+participant RemotingClient
+end box
+
+box namesrv 	#3CB371
+participant DefaultRequestProcessor
+participant RouteInfoManager
+end box
+
+发送mq消息 -> DefaultMQProducer : send
+DefaultMQProducer -> DefaultMQProducerImpl : sendDefaultImpl
+note right
+位置：org.apache.rocketmq.client.impl.producer.DefaultMQProducerImpl.sendDefaultImpl
+end note
+
+DefaultMQProducerImpl -> DefaultMQProducerImpl : tryToFindTopicPublishInfo
+
+note right
+1、尝试获取Topic路由信息，如果没有则从NameServer获取
+2、返回TopicPublishInfo
+end note
+DefaultMQProducerImpl -> MQClientInstance : updateTopicRouteInfoFromNameServer
+MQClientInstance -> MQClientAPIImpl : getTopicRouteInfoFromNameServer
+MQClientAPIImpl -> RemotingClient : invokeSync
+note right
+发送同步消息（通过netty 后续完善）
+end note
+RemotingClient -> DefaultRequestProcessor : getRouteInfoByTopic
+DefaultRequestProcessor -> RouteInfoManager : pickupTopicRouteData
+note right
+根据topic获取路由信息
+end note
+
+'截止
+deactivate DefaultMQProducerImpl
+DefaultMQProducerImpl -> DefaultMQProducerImpl : selectOneMessageQueue
+note right
+根据topic获取路由信息
+end note
+deactivate DefaultMQProducerImpl
+DefaultMQProducerImpl -> DefaultMQProducerImpl : sendKernelImpl
+note right
+发送消息核心方法 to-do
+
+end note
+
+@enduml
