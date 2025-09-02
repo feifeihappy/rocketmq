@@ -7,25 +7,30 @@ autonumber
 '自动激活关键字
 autoactivate on
 '设置间距
-skinparam ParticipantPadding 10
+'skinparam ParticipantPadding 5
 skinparam BoxPadding 20
 
 actor 发送mq消息
 
-box client #LightBlue
+box client
 participant DefaultMQProducer
 participant DefaultMQProducerImpl
 participant MQClientInstance
 participant MQClientAPIImpl
 end box
 
-box remoting #FFC0CB
-participant RemotingClient
+box remoting
+participant NettyRemotingClient
 end box
 
-box namesrv 	#3CB371
+box namesrv
 participant DefaultRequestProcessor
 participant RouteInfoManager
+end box
+
+
+box broker
+participant SendMessageProcessor
 end box
 
 发送mq消息 -> DefaultMQProducer : send
@@ -42,27 +47,66 @@ note right
 end note
 DefaultMQProducerImpl -> MQClientInstance : updateTopicRouteInfoFromNameServer
 MQClientInstance -> MQClientAPIImpl : getTopicRouteInfoFromNameServer
-MQClientAPIImpl -> RemotingClient : invokeSync
 note right
-发送同步消息（通过netty 后续完善）
+获取TopicPublishInfo
 end note
-RemotingClient -> DefaultRequestProcessor : getRouteInfoByTopic
+
+MQClientAPIImpl -> NettyRemotingClient : invokeSync
+note right
+<color red> 发送同步消息（通过netty 后续完善）
+end note
+NettyRemotingClient -> DefaultRequestProcessor : processRequest
+
+DefaultRequestProcessor -> DefaultRequestProcessor : getRouteInfoByTopic
 DefaultRequestProcessor -> RouteInfoManager : pickupTopicRouteData
 note right
 根据topic获取路由信息
 end note
+return successfully
+return successfully
+return successfully
+return successfully
 
 '截止
+
+
+MQClientInstance -> MQClientInstance : put
+note right
+1、brokerAddrTable
+2、topicPublishInfoTable
+2、topicSubscribeInfoTable
+2、topicRouteTable
+end note
+
+deactivate MQClientInstance
+return successfully
 deactivate DefaultMQProducerImpl
 DefaultMQProducerImpl -> DefaultMQProducerImpl : selectOneMessageQueue
 note right
-根据topic获取路由信息
+选择一个队列
 end note
 deactivate DefaultMQProducerImpl
 DefaultMQProducerImpl -> DefaultMQProducerImpl : sendKernelImpl
 note right
-发送消息核心方法 to-do
-
+发送消息核心方法
+<color:red>消息发给broker（待补充）
+end note
+DefaultMQProducerImpl -> MQClientInstance : findBrokerAddressInPublish
+return successfully
+note right
+根据brokerName 获取broker地址
 end note
 
+DefaultMQProducerImpl -> MQClientAPIImpl : sendMessage
+MQClientAPIImpl -> MQClientAPIImpl : sendMessageSync
+MQClientAPIImpl -> NettyRemotingClient : invokeSync
+note right
+发送消息
+end note
+NettyRemotingClient -> SendMessageProcessor : processRequest
+SendMessageProcessor -> SendMessageProcessor : sendMessage
+
+note right
+broker 如何存储消息- todo
+end note
 @enduml
