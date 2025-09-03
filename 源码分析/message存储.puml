@@ -1,0 +1,34 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title message存储：<color red>标红为核心逻辑 <color green> 绿色：后续待补充
+'自动对消息编号
+autonumber
+'自动激活关键字
+autoactivate on
+'设置间距
+'skinparam ParticipantPadding 5
+skinparam BoxPadding 20
+
+actor mq消息
+
+box store
+participant CommitLog
+participant MappedFileQueue
+end box
+
+mq消息 -> CommitLog: putMessage
+note  right
+位置：org.apache.rocketmq.store.CommitLog.putMessage
+end note
+
+CommitLog -> MappedFileQueue: getLastMappedFile
+note  right
+逻辑：获取待写入映射文件
+- CopyOnWriteArrayList<MappedFile> mappedFiles
+end note
+return MappedFile
+
+
+
+@enduml

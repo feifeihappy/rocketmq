@@ -599,6 +599,8 @@ public class CommitLog {
         long eclipsedTimeInLock = 0;
 
         MappedFile unlockMappedFile = null;
+
+        //获取待写入映射文件
         MappedFile mappedFile = this.mappedFileQueue.getLastMappedFile();
 
         putMessageLock.lock(); //spin or ReentrantLock ,depending on store config
