@@ -1,7 +1,7 @@
 @startuml
 'https://plantuml.com/sequence-diagram
 
-title message发送
+title message发送与接收：<color red>标红为核心逻辑 <color green> 绿色：后续待补充
 '自动对消息编号
 autonumber
 '自动激活关键字
@@ -33,17 +33,23 @@ box broker
 participant SendMessageProcessor
 end box
 
+box store
+participant DefaultMessageStore
+end box
+
 发送mq消息 -> DefaultMQProducer : send
 DefaultMQProducer -> DefaultMQProducerImpl : sendDefaultImpl
 note right
 位置：org.apache.rocketmq.client.impl.producer.DefaultMQProducerImpl.sendDefaultImpl
 end note
 
-DefaultMQProducerImpl -> DefaultMQProducerImpl : tryToFindTopicPublishInfo
+DefaultMQProducerImpl -> DefaultMQProducerImpl : <color red> tryToFindTopicPublishInfo
 
 note right
-1、尝试获取Topic路由信息，如果没有则从NameServer获取
-2、返回TopicPublishInfo
+1、获取Topic路由信息
+- 尝试本地（ConcurrentMap<String/* topic */, TopicPublishInfo> topicPublishInfoTable）Topic路由信息
+- 如果没有则从NameServer获取
+
 end note
 DefaultMQProducerImpl -> MQClientInstance : updateTopicRouteInfoFromNameServer
 MQClientInstance -> MQClientAPIImpl : getTopicRouteInfoFromNameServer
@@ -53,7 +59,7 @@ end note
 
 MQClientAPIImpl -> NettyRemotingClient : invokeSync
 note right
-<color red> 发送同步消息（通过netty 后续完善）
+<color green> 发送同步消息（通过netty 后续完善）
 end note
 NettyRemotingClient -> DefaultRequestProcessor : processRequest
 
@@ -81,15 +87,18 @@ end note
 deactivate MQClientInstance
 return successfully
 deactivate DefaultMQProducerImpl
-DefaultMQProducerImpl -> DefaultMQProducerImpl : selectOneMessageQueue
+DefaultMQProducerImpl -> DefaultMQProducerImpl : <color red> selectOneMessageQueue
 note right
-选择一个队列
+1、选择一个队列
+- List<MessageQueue> messageQueueList
 end note
 deactivate DefaultMQProducerImpl
-DefaultMQProducerImpl -> DefaultMQProducerImpl : sendKernelImpl
+DefaultMQProducerImpl -> DefaultMQProducerImpl : <color red> sendKernelImpl
 note right
-发送消息核心方法
-<color:red>消息发给broker（待补充）
+1、发送消息核心方法
+- 获取broker地址（ConcurrentMap<String/* Broker Name */, HashMap<Long/* brokerId */, String/* address */>> brokerAddrTable）
+- 发送消息前后逻辑处理
+- 发送消息
 end note
 DefaultMQProducerImpl -> MQClientInstance : findBrokerAddressInPublish
 return successfully
@@ -105,8 +114,12 @@ note right
 end note
 NettyRemotingClient -> SendMessageProcessor : processRequest
 SendMessageProcessor -> SendMessageProcessor : sendMessage
-
 note right
-broker 如何存储消息- todo
+broker 存储消息
 end note
+SendMessageProcessor -> DefaultMessageStore : <color red> putMessage
+note right
+添加消息到 commitLog
+end note
+
 @enduml
