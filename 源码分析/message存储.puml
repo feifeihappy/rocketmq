@@ -15,6 +15,7 @@ actor mq消息
 box store
 participant CommitLog
 participant MappedFileQueue
+participant MappedFile
 end box
 
 mq消息 -> CommitLog: putMessage
@@ -22,13 +23,40 @@ note  right
 位置：org.apache.rocketmq.store.CommitLog.putMessage
 end note
 
-CommitLog -> MappedFileQueue: getLastMappedFile
+CommitLog -> MappedFileQueue: <color red>getLastMappedFile
+return MappedFile
+
 note  right
 逻辑：获取待写入映射文件
 - CopyOnWriteArrayList<MappedFile> mappedFiles
+- org.apache.rocketmq.broker.BrokerController.initialize (BrokerStartup 启动时初始化写入映射文件：mappedFiles)
 end note
-return MappedFile
 
+CommitLog -> CommitLog: <color red>lock
 
+note  right
+逻辑：本地锁
+ReentrantLock putMessageNormalLock = new ReentrantLock()
+putMessageNormalLock.lock()
+end note
+return
 
+CommitLog -> MappedFile: appendMessage
+MappedFile -> CommitLog: <color red>doAppend
+
+note  right
+消息写入缓冲区（ByteBuffer）
+end note
+return AppendMessageResult
+return AppendMessageResult
+CommitLog -> CommitLog: <color red>unlock
+return
+note  right
+本地锁解锁
+end note
+CommitLog -> CommitLog: <color red>handleDiskFlush
+
+note  right
+同步刷盘或异步刷盘-todo 待了解清楚
+end note
 @enduml
