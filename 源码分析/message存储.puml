@@ -46,6 +46,7 @@ MappedFile -> CommitLog: <color red>doAppend
 
 note  right
 消息写入缓冲区（ByteBuffer）
+位置：org.apache.rocketmq.store.MappedFile.writeBuffer
 end note
 return AppendMessageResult
 return AppendMessageResult
@@ -55,8 +56,27 @@ note  right
 本地锁解锁
 end note
 CommitLog -> CommitLog: <color red>handleDiskFlush
-
 note  right
 同步刷盘或异步刷盘-todo 待了解清楚
+1、org.apache.rocketmq.broker.BrokerStartup.createBrokerController； 实例化：flushCommitLogService = new GroupCommitService()
+2、org.apache.rocketmq.broker.BrokerStartup.start broker启动时(flushCommitLogService.start()) 根据配置文件,开启同步刷盘线程
+end note
+CommitLog -> CommitLog: putRequest
+note  right
+1、List<GroupCommitRequest> requestsWrite
+2、requestsWrite.add(request) 添加请求 （GroupCommitRequest 代表刷盘的一个请求）
+3、flushCommitLogService 线程内while 循环处理请求
+ - waitForRunning 读写分离 （org.apache.rocketmq.store.CommitLog.GroupCommitService.swapRequests）
+end note
+CommitLog -> MappedFileQueue: flush
+MappedFileQueue -> MappedFileQueue: findMappedFileByOffset()
+note  right
+逻辑：根据offset 获取映射文件
+end note
+return MappedFile
+MappedFileQueue -> MappedFile: flush
+note  right
+1、org.apache.rocketmq.store.MappedFile.fileChannel
+2、fileChannel.force ｜｜ mappedByteBuffer.force()
 end note
 @enduml
